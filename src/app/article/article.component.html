@@ -1,0 +1,130 @@
+<div id="pageContainer">
+    <section id="article">
+
+
+        <!--        Le conde HTML Ci dessous s'affiche uniquement si les habilitations-->
+        <!--        ont bien été fournies à l'utilsiateur.-->
+
+        <div *ngIf="!articleProtected && !defaultMode" id="authorizedSection">
+
+
+            <!--            Affichage en lecture de l'article-->
+            <div *ngIf="!editMode && currentArticle" id="readArticle">
+
+                <div id="titleArea">
+
+                    <h1>{{currentArticle.name}}</h1>
+                    <h2>Author : sanadi- Published
+                        at 7777 kkk {{currentArticle.name}}
+                        </h2>
+                    <div id="zone_picto">
+
+
+                    </div>
+                </div>
+                <div id="textArea">
+                    <p>
+                        {{ currentArticle.content }}
+                    </p>
+
+
+                </div>
+
+
+
+
+            </div>
+        </div>
+
+
+
+
+
+
+
+<!--        Page d'accueil-->
+        <div *ngIf="defaultMode" id="defaultMode">
+
+            <h1>Bienvenue !</h1>
+            <h1>Veuillez saisir un article dans la barre de recherche à
+                droite</h1>
+        </div>
+
+    </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--    Section recherche-->
+
+    <section id="search">
+
+
+<!--        Name                              logout -->
+<!--        ---------------------------------------- -->
+
+        <div id="firstLineSearch">
+
+        </div>
+
+
+        <!---------------------------------------------------- -->
+        <!--  search                                    { Go } -->
+        <!---------------------------------------------------- -->
+
+        <div id="MainSearch">
+
+        </div>
+
+
+
+
+        <!-------------------------------------------------------->
+        <!--  search by tag                       < select tri> -->
+        <!-------------------------------------------------------->
+
+        <div id="tagSearch">
+
+        </div>
+
+
+
+        <!-------------------------------------------------------->
+        <!--  tag1 X    tag2 X   tag3X etc...                   -->
+        <!-------------------------------------------------------->
+
+        <div id="listTagsSearched">
+
+        </div>
+
+
+
+
+
+
+
+
+
+        <div id="resultsSearch">
+
+
+        </div>
+    </section>
+
+<!--
+    <div id="editLoader" [ngClass]="{'displayed':article.isBusy}">
+        <img src="../../assets/img/loading.gif" height="64"
+             width="64"/>
+    </div>
+-->
+</div>
+
