@@ -1,11 +1,12 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {tap} from 'rxjs/operators';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Article} from '../models/article.model';
+import {Comment} from '../models/comment.model';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class ArticleService {
 
@@ -18,44 +19,187 @@ export class ArticleService {
         public http: HttpClient) {
     }
 
-    public getArticle(id: string): Observable<Article> {
-      return this.http.get<Article>('/api/article?idArticle=' + id).pipe(
-          tap((article: Article)=> {
-               console.log(article);
-              this.currentArticle = article;
-          })
-      )
-    }
+
+
+    //--------------------------------------------------------------------------
+    // Commun
+    //--------------------------------------------------------------------------
 
     public retrieveTags() : Promise<any> {
 
-      return new Promise((resolve, reject)=> {
+        return new Promise((resolve, reject)=> {
 
-          if (!this.tags) {
+            if (!this.tags) {
 
-              this.http.get<any>('/api/tags').subscribe((tags:any) => {
+                this.http.get<any>('/api/tags').subscribe((tags:any) => {
 
-                  console.log(tags);
-                  this.tags = tags.map(tag => {
-                      tag.chosen = false;
-                      tag.selectedForSearch = false;
-                      return tag;
-                  });
-                  resolve(this.tags);
-              })
+                    this.tags = tags.map(tag => {
+                        tag.chosen = false;
+                        tag.selectedForSearch = false;
+                        return tag;
+                    });
+                    resolve(this.tags);
+                })
 
-          } else {
+            } else {
 
-              this.tags = this.tags.map(tag => {
-                  tag.chosen = false;
-                  tag.selectedForSearch = false;
-                  return tag;
-              });
-              resolve(this.tags);
-          }
+                this.tags = this.tags.map(tag => {
+                    tag.chosen = false;
+                    tag.selectedForSearch = false;
+                    return tag;
+                });
+                resolve(this.tags);
+            }
 
-      });
-  }
+        });
+    }
+
+
+    //--------------------------------------------------------------------------
+    // Edition / Creation
+    //--------------------------------------------------------------------------
+
+    public addArticle(
+        formData: { name: string, content: string, draft: string },
+        tags: any[]
+
+    ) : Observable<Article> {
+
+        let infosArticle = {
+            name: formData.name,
+            content: formData.content,
+            draft: formData.draft,
+            tags: tags
+        };
+
+        return this.http.post<Article>('/api/article/addArticle', infosArticle).pipe(
+            tap((article: Article) => {
+                this.currentArticle = article;
+            })
+        );
+    }
+
+
+    public updateArticle(
+
+        formData: { name: string, content: string, draft: string},
+        id: string,
+        tags: any[]
+
+    ): Observable<Article> {
+
+        let infosArticle = {
+            id: id,
+            name: formData.name,
+            content: formData.content,
+            draft: formData.draft,
+            tags: tags
+        };
+
+        return this.http.post<Article>('/api/article/updateArticle', infosArticle).pipe(
+            tap((article: Article) => {
+
+                this.currentArticle = article;
+            })
+        );
+    }
+
+    public deleteArticle(id): Observable<string> {
+
+        return this.http.post<string>('/api/article/deleteArticle', {id:id});
+    }
+
+
+
+
+
+
+
+    //--------------------------------------------------------------------------
+    // Lecture Article
+    //--------------------------------------------------------------------------
+
+    public addComment(textComment: string): Observable<Comment> {
+
+        const infosComment = {
+            text: textComment,
+            idArticle: this.currentArticle.id
+        }
+
+        return this.http.post<Comment>('/api/article/addComment', infosComment);
+    }
+
+
+    public getArticle(id: string): Observable<Article> {
+
+            return this.http.get<Article>('/api/article/getArticle?idArticle=' + id).pipe(
+                tap((article: Article)=> {
+                    console.log("sanadi");
+                    console.log(article);
+                    this.currentArticle = article;
+                })
+            )
+    }
+
+
+    public removeReaction(id:string): Observable<string> {
+
+        return this.http.post<string>('/api/article/removeReaction', {id:id});
+    }
+
+    public addReaction(reaction: any): Observable<any> {
+
+        const infosReaction = {
+            type: reaction,
+            idArticle: this.currentArticle.id
+        };
+
+        return this.http.post<any>('/api/article/addReaction', infosReaction);
+
+    }
+
+
+
+
+
+
+
+
+
+
+    //--------------------------------------------------------------------------
+    // Recherche
+    //--------------------------------------------------------------------------
+
+    public searchArticles(query: string, searchedTags: any[]): Observable<any> {
+
+        const infoSearch = {
+            query: query,
+            searchedTags: searchedTags,
+            pageNumber : this.nextPage
+        }
+
+        return this.http.post<any>('/api/article/searchArticles', infoSearch).pipe(
+            tap((repsonse) => {
+
+                    if (repsonse.nextPage !== "end") {
+                        this.nextPage = repsonse.nextPage;
+                    } else {
+                        this.nextPage = 1
+                    }
+
+                }
+            )
+        );
+    }
+
+
+
+
+
+
 
 
 }
+
+
