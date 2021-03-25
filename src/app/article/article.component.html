@@ -312,13 +312,13 @@
             <select style="color: #0a0a0a;" (change)="pickSorter()"
                     name="order" id="order"
                     [(ngModel)]="sortResults">
-                <option style="font-weight: bold;" selected value="">Filter by</option>    
-                <option value="createdAt-asc">Ancien > Récent</option>
-                <option  value="createdAt-desc">Récent >
-                    Ancien
-                </option>
-                <option value="user@username-asc">Auteur A > Z</option>
-                <option value="user@username-desc">Auteur Z > A</option>
+                <option style="font-weight: bold;" selected value="">Filter by</option>  
+                <option  value="createdAt-desc">By Date descendant
+                </option>  
+                <option value="createdAt-asc">By Date ascendant</option>
+                
+                <option value="user@username-asc">Autor A > Z</option>
+                <option value="user@username-desc">Autor Z > A</option>
             </select>
         </div>
 

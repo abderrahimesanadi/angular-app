@@ -36,7 +36,9 @@ import {CustomDatePipe} from './pipes/custumDate.pipe';
         CustomDatePipe
     ],
     imports: [
-        BrowserModule,
+        BrowserModule.withServerTransition({
+            appId: 'ng-universal-demystified'
+        }),
         AppRoutingModule,
         RouterModule,
         FormsModule,

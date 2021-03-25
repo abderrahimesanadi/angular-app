@@ -7,9 +7,10 @@ import { join } from 'path';
 import { AppServerModule } from './src/main.server';
 import { APP_BASE_HREF } from '@angular/common';
 import { existsSync } from 'fs';
-import * as proxy from 'http-proxy-middleware'
+import 'localstorage-polyfill'
 
-const apiProxy = proxy('/api', { target: 'http://localhost:3000' , "secure": false,"changeOrigin": true});
+global['localStorage'] = localStorage;
+
 
 // The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {
@@ -39,8 +40,6 @@ export function app(): express.Express {
 
   return server;
 }
-
-app().use('/api', apiProxy);
 
 function run(): void {
   const port = process.env.PORT || 4000;
